@@ -48,9 +48,9 @@ run_test() {
 
 ################################################## execute ##################################################
 clear
-docker_install_azurite
+# docker_install_azurite
 # solution_initilize
 # generate_rsa_keys Document
-# update_dotnet_packages
+update_dotnet_packages
 
 # run_test "Document.Tests"

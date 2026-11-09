@@ -8,7 +8,9 @@ azurite_container="azurite"
 
 docker_install_azurite(){
   docker container rm $azurite_container --force
-  docker run --name $azurite_container --detach -p 10000:10000 -p 10001:10001 -p 10002:10002 $azurite_image
+  # --skipApiVersionCheck: Azure SDKs can be ahead of the latest Azurite release
+  docker run --name $azurite_container --detach -p 10000:10000 -p 10001:10001 -p 10002:10002 $azurite_image \
+    azurite --blobHost 0.0.0.0 --queueHost 0.0.0.0 --tableHost 0.0.0.0 --skipApiVersionCheck
 }
 
 solution_initilize(){
@@ -51,6 +53,6 @@ clear
 # docker_install_azurite
 # solution_initilize
 # generate_rsa_keys Document
-update_dotnet_packages
+# update_dotnet_packages
 
-# run_test "Document.Tests"
+run_test "Document.Tests"

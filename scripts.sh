@@ -1,15 +1,14 @@
 #!/bin/bash
 
 ################################################## variables ##################################################
-mailhog_image="mailhog/mailhog:v1.0.1"
-mailhog_container="mailhog"
+azurite_image="mcr.microsoft.com/azure-storage/azurite:latest"
+azurite_container="azurite"
 
 ################################################## functions ##################################################
 
-docker_install_mailhog(){
-  # open in http://localhost:8025
-  docker container rm $mailhog_container --force
-  docker run --name $mailhog_container --detach --publish 1025:1025 --publish 8025:8025 $mailhog_image
+docker_install_azurite(){
+  docker container rm $azurite_container --force
+  docker run --name $azurite_container --detach -p 10000:10000 -p 10001:10001 -p 10002:10002 $azurite_image
 }
 
 solution_initilize(){
@@ -49,9 +48,9 @@ run_test() {
 
 ################################################## execute ##################################################
 clear
-# docker_install_mailhog
+docker_install_azurite
 # solution_initilize
-# generate_rsa_keys Notification
+# generate_rsa_keys Document
 # update_dotnet_packages
 
-# run_test "Notification.Tests"
+# run_test "Document.Tests"

@@ -4,3 +4,7 @@ Keys
 obj
 TestResults
 tmp
+node_modules
+dist
+*.local
+.vite

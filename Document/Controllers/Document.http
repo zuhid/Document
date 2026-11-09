@@ -1,0 +1,6 @@
+@Document_HostAddress = http://localhost:5104
+
+GET {{Document_HostAddress}}/weather/
+Accept: application/json
+
+###

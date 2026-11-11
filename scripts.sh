@@ -3,14 +3,27 @@
 ################################################## variables ##################################################
 azurite_image="mcr.microsoft.com/azure-storage/azurite:latest"
 azurite_container="azurite"
+nginx_image="nginx:alpine"
+nginx_container="nginx"
 
 ################################################## functions ##################################################
 
 docker_install_azurite(){
+  # sudo snap install storage-explorer
   docker container rm $azurite_container --force
   # --skipApiVersionCheck: Azure SDKs can be ahead of the latest Azurite release
   docker run --name $azurite_container --detach -p 10000:10000 -p 10001:10001 -p 10002:10002 $azurite_image \
     azurite --blobHost 0.0.0.0 --queueHost 0.0.0.0 --tableHost 0.0.0.0 --skipApiVersionCheck
+}
+
+# Proxies http://localhost:5105/demo... to the Document API (dotnet run --project Document).
+# --network host because Kestrel listens on localhost:5104 only, which a bridged container can't reach.
+docker_install_nginx(){
+  docker container rm $nginx_container --force
+  docker run --name $nginx_container --detach --network host \
+    -v "$PWD/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro" \
+    -v "$PWD/nginx/proxy_headers.inc:/etc/nginx/conf.d/proxy_headers.inc:ro" \
+    $nginx_image
 }
 
 solution_initilize(){
@@ -51,8 +64,9 @@ run_test() {
 ################################################## execute ##################################################
 clear
 # docker_install_azurite
+docker_install_nginx
 # solution_initilize
 # generate_rsa_keys Document
 # update_dotnet_packages
 
-run_test "Document.Tests"
+# run_test "Document.Tests"
